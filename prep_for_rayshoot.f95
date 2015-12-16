@@ -35,7 +35,7 @@ program prep_rayshoot
 
   implicit none
 
-  integer, parameter :: NRAY=39000, NSTA=1900prep_for_rayshoot.exe
+  integer, parameter :: NRAY=39000, NSTA=1900
   integer :: evday(NRAY), OpenStatus, linecount
   real :: slatd(NRAY),slond(NRAY),stelev(NRAY)
   real :: elatd(NRAY),elond(NRAY),deps(NRAY)
@@ -46,13 +46,10 @@ program prep_rayshoot
   character*8 phasej(NRAY),statl(NRAY)
 
   integer :: i,ii,j,nrays,nphase,evstart,nevent,nphasetot,nstats
-  integer :: phaseln,leng,freqln
+  integer :: phaseln,freqln
   double precision currevtime
   character(Len=8) phase,statlist(NSTA),freqid
   character(Len=80) infile,outfile,datstafile
-
-
-  character(Len=10) :: input
 
   logical filefound,newstat
 
