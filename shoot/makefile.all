@@ -1,0 +1,33 @@
+## makefile 
+
+FDEBUG = -g
+#FFLAGS = $(FDEBUG)  -ffixed-line-length-0
+FFLAGS = -ffixed-line-length-0
+BIN = /home/arsinoe/rallen/software/x
+
+SACIO = /misc/llocal/sac/lib/sacio.a
+
+AFOR    = mesh_car.f
+AOBJ    = $(AFOR:.f=.o) 
+mesh_car: $(AOBJ) 
+#	f77 $(FFLAGS) -o $(BIN)/mesh_car $(AOBJ)
+	pgf77 -o $(BIN)/mesh_car $(AOBJ)
+AOBJ:	$(AFOR) 
+ 
+BFOR	= shootray_evt.f \
+		azdel.f bisec.f bpt.f coordl.f \
+                decomq.f derivs.f derivs_pq.f dfcns.f dfint.f dgauleg.f \
+                dintw_kd.f dintw_kntbl.f driver_rk4.f driver_pq_rk4.f \
+                euler_rot.f euler_subs.f eval_kntstr.f fftsubs.f findr.f \
+                getfid.f getvmdl.f getv_cmdl.f getv_smdl.f \
+                hessian.f intrprayp.f locates.f \
+                pkv.f prjlag.f projectv.f projqn.f \
+                ray2xyz.f raylag.f rayptbl.f rfft.f rotate.f rtp2xyz.f \                setvmdl.f shootout.f signature.f \
+                tracer.f tracer_pq.f \
+                velodisc.f velomodel.f xyz2rtp.f
+BOBJ    = $(BFOR:.f=.o) 
+shootray_evt: $(BOBJ) 
+	pgf77 -o $(BIN)/shootray_evt $(BOBJ)
+BOBJ:	$(BFOR) 
+
+
