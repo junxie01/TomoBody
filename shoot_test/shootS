@@ -1,0 +1,128 @@
+#!/bin/csh
+
+# Set some parameters and shoot rays 
+# do each phase and freq separatly and combine to matrix later
+# This scrip runs shootray_evt
+
+# raytracing for P, PKIKP, S, SKSac 
+# (Pdiff and Sdiif problematic - talk to hung)
+# 1st line: insflag (=1 interactively; =2 from file)
+# 2nd line: ivelin (1=PREM (prem); -4=iasp91(iasp), 2=AK135-continent(ak1c))
+# 3rd line: iphase= 1 for P; =18 for PKIKP; =12 for Pdiff
+#                 =21 for S; =36 for SKSac; =32 for Sdiff 
+
+## select interactive flag; frequency ident; 1D vel model
+set insflag = 1
+set freqid = "b" 
+set ivelin = -4		; set  velin = "iasp"
+#set ivelin = 2		; set  velin = "ak1c"
+## select one phase 
+#set iphase = 1     ; set  phase = "P" 		; set ophase = $phase
+#set iphase = 18    ; set  phase = "PKIKP" 	; set ophase = "PKPdf"
+set iphase = 21    ; set  phase = "S" 		; set ophase = $phase
+#set iphase = 36    ; set  phase = "SKSac" 	; set ophase = $phase
+
+set inputfile=${phase}"."${freqid}".datalist"
+echo "inputfile: " $inputfile
+
+
+
+/Users/rmartinshort/Documents/Berkeley/Alaska/FORTRAN/GroupCodes/Shoot/GroupSoftwareTest/bin/shootray_evt << END
+$insflag
+$ivelin
+$iphase
+1000. 0.
+10. 5. .5
+500
+1, 1
+1.0e-10, 0.5
+1.
+1
+$inputfile
+END
+
+echo shootrays.bp.${ophase} " ==> " shootrays.bp.${ophase}.${freqid}.${velin}
+echo shootrays.${ophase} " ==> " shootrays.${ophase}.${freqid}.${velin}
+mv shootrays.bp.${ophase} shootrays.bp.${ophase}.${freqid}.${velin}
+mv shootrays.${ophase}  shootrays.${ophase}.${freqid}.${velin}
+
+exit
+##################################################################
+
+# for PKIKP aka PKPdf
+set phase = 18
+$PD/shootray_evt<<!> run.out
+1
+$ivelin
+$phase
+1000. 0.
+10. 5. .5
+500
+1, 1
+1.0e-10, 0.5
+1.
+1
+PKIKP.b.tbt.evtlst
+!
+mv shootrays.bp.PKIKP shootrays.bp.PKIKP.b.tbt.ak1c
+mv shootrays.PKIKP  shootrays.PKIKP.b.tbt.ak1c
+
+set phase = 12
+$PD/shootray_df_evt<<!> run.out
+1
+$ivelin
+$phase
+1000. 0.
+10. 5. .5
+500
+1, 1
+1.0e-10, 0.5
+1.
+1
+../Pdiff.b.tbt.evtlst
+!
+mv shootrays.bp.Pd shootrays.bp.Pdiff.l.tbt.ak1c
+mv shootrays.Pd  shootrays.Pdiff.l.tbt.ak1c
+
+# S
+set phase = 21
+$PD/shootray_evt<<!>run.out
+!
+mv shootrays.bp.S shootrays.bp.S.l.tbt.ak1c
+mv shootrays.S  shootrays.S.l.tbt.ak1c
+
+# SKSac
+set phase = 36
+$PD/shootray_evt<<!>run.out
+1
+$ivelin
+$phase
+1000. 0.
+10. 5. .5
+500
+1, 1
+1.0e-10, 0.5
+1.
+1
+../SKSac.b.tbt.evtlst
+!
+mv shootrays.bp.SKSac shootrays.bp.SKSac.l.tbt.ak1c
+mv shootrays.SKSac  shootrays.SKSac.l.tbt.ak1c
+
+#Sdiff
+set phase = 32
+$PD/shootray_df_evt<<!>run.out
+1
+$ivelin
+$phase
+1000. 0.
+10. 5. .5
+500
+1, 1
+1.0e-10, 0.5
+1.
+1
+../Sdiff.b.tbt.evtlst
+!
+mv shootrays.bp.Sd shootrays.bp.Sdiff.l.tbt.ak1c
+mv shootrays.Sd  shootrays.Sdiff.l.tbt.ak1c
