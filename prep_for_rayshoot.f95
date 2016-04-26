@@ -56,7 +56,7 @@ program prep_rayshoot
   !
   !   READ shoot.params FILE INTO MEMORY
   !
-  !Hello!~:
+  !
 
   inquire(file='shoot.params',exist=filefound)
 
